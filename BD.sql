@@ -1,0 +1,54 @@
+-- DROP DATABASE IF EXISTS Week_plane;
+-- CREATE DATABASE Week_plane;
+-- USE Week_plane;
+-- 
+-- 
+-- 
+-- DROP TABLE IF EXISTS interests;
+-- CREATE TABLE interests (
+-- 	id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+--     interest Varchar(255),
+--     created_at DATETIME DEFAULT NOW(),
+-- 	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
+--     ) COMMENT 'Таблица Интересов';
+--    
+-- DROP TABLE IF EXISTS goals;
+-- CREATE TABLE goals (
+-- 	interest_id BIGINT UNSIGNED NOT NULL,
+--     goal VARCHAR(255),
+--     status ENUM ('Сделано','Не сделано') default 'Не сделано',
+--     created_at DATETIME DEFAULT NOW(),
+-- 	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
+-- 	FOREIGN KEY (interest_id) REFERENCES interests(id),
+-- 	INDEX goal (goal)
+--     ) COMMENT 'Цели интереса';
+--     
+-- DROP TABLE IF EXISTS date_interest;
+-- CREATE TABLE date_interest (
+-- 	id BIGINT UNSIGNED NOT NULL unique,
+-- 	interest_id BIGINT UNSIGNED NOT NULL,
+--     dt DATE,
+--     created_at DATETIME DEFAULT NOW(),
+-- 	updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
+-- 	FOREIGN KEY (interest_id) REFERENCES interests(id),
+-- 	INDEX dt (dt)
+--     ) COMMENT 'Дата цель';
+--     
+-- INSERT INTO interests(interest) VALUES 
+-- ('Пун-Пун'),
+-- ('Учеба'),
+-- ('Тренировка'),
+-- ('Игра');
+-- 
+-- INSERT INTO goals(interest_id,goal) VALUES 
+-- (1,'Сходить в кино'),
+-- (1,'отметить 14 февраля'),
+-- (2,'Сделать домашку'),
+-- (3,'Сходить на все тренировки за месяц'),
+-- (3,'Пойти на ММА'),
+-- (4,'Найти новую игру');
+
+
+CREATE OR REPLACE VIEW  inter_goal AS SELECT a.interest , b.goal,b.status from  interests a join goals b on a.id =b.interest_id ;
+
+select * from inter_goal;
