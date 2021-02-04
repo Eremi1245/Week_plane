@@ -119,7 +119,6 @@ def delete_db(**kwargs):
     # conn.commit()
 
 def dowload_data():
-	# names=query_with_fetchall('inter_date')
 	names=['x','0', '0', '0', '0', '0', '0', '0',
             'x','0', '0', '0', '0', '0', '0', '0',
             'x','0', '0', '0', '0', '0', '0', '0',
@@ -127,10 +126,13 @@ def dowload_data():
             'x','0', '0', '0', '0', '0', '0', '0',
             'x','0', '0', '0', '0', '0','0', '0',]
 	month=[x for x in cal().itermonthdates(2021, 2)]
+	date_from_base=query_with_fetchall('inter_date')
+	for i in date_from_base:
+		month[month.index(i[1])]=str(i[1])+'\n'*3+i[0]
 	start_index=1
 	for i in month:
 		if names[start_index] =='x':
-			names[start_index+1] ==str(i)
+			names[start_index+1] =str(i)
 			start_index+=1
 		else:
 			names[start_index]=str(i)
