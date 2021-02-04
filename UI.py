@@ -8,8 +8,9 @@ from PyQt5.QtWidgets import (QWidget, QGridLayout,
 
 class Example(QWidget):
 
-    def __init__(self):
+    def __init__(self,names):
         super().__init__()
+        self.names = names
 
         self.initUI()
 
@@ -17,28 +18,34 @@ class Example(QWidget):
 
         grid = QGridLayout()
         self.setLayout(grid)
-
-        names = ['1', '2', '3', '4', '5', '6', '7',
-                 '1', '2', '3', '4', '5', '6', '7',
-                 '1', '2', '3', '4', '5', '6','7',
-                 '1', '2', '3', '4', '5', '6', '7',
-                 '1', '2', '3', '4', '5', '6', '7',
-                 '1', '2', '3', '4', '5','6', '7',
-                 '1', '2', '3', '4', '5', '6', '7']
-
-        positions = [(i, j) for i in range(1,7) for j in range(1,8)]
-
+        self.setGeometry(350,150,700,300)
+        Monday=QLabel('Понедельник')
+        Tuesday=QLabel('Вторник')
+        Wednesday=QLabel('Среда')
+        Thursday=QLabel('Четверг')
+        Friday=QLabel('Пятница')
+        Saturday=QLabel('Суббота')
+        Sunday=QLabel('Воскресенье')
+        positions = [(i, j) for i in range(1,8) for j in range(8)]
+        for position, name in zip(positions, self.names):
+            button = QPushButton(name)
+            grid.addWidget(button, *position)
         label=QLabel(f'Интересы\n'
                      f'цели\n'
                      f'месяц\n'
                      f'бабушка\n')
-        grid.addWidget(label, 0, 0, 6, 1)
-        for position, name in zip(positions, names):
-            button = QPushButton(name)
-            grid.addWidget(button, *position)
-        self.move(300, 150)
+        label.setStyleSheet("background-color: blue");
+        grid.addWidget(label, 0, 0, 7, 1)
+        grid.addWidget(Monday, 0, 1)
+        grid.addWidget(Tuesday, 0, 2)
+        grid.addWidget(Wednesday, 0, 3)
+        grid.addWidget(Thursday, 0, 4)
+        grid.addWidget(Friday, 0, 5)
+        grid.addWidget(Saturday, 0, 6)
+        grid.addWidget(Sunday, 0, 7)
         self.setWindowTitle('Week Plane')
         self.show()
+
 
 
 if __name__ == '__main__':

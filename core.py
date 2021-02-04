@@ -6,8 +6,9 @@ from configparser import ConfigParser
 from functools import wraps
 import mysql.connector
 from mysql.connector import Error
-
-
+from UI import *
+from calendar import Calendar as cal
+from datetime import date as dt
 def read_db_config(filename='db_config.ini', section='mysql'):
     """ Читает конфигурацию Базы данных и возвращает словарь с параметрами
     :param filename: имя конфига
@@ -47,10 +48,11 @@ def connect(func):
 
         except Error as error:
             print(error)
-        if func(*args, **kwargs):
+        func_result=func(*args, **kwargs)
+        if func_result:
             conn.close()
             print('Соединение закрыто.')
-            return func(*args, **kwargs)
+            return func_result
         else:
             conn.close()
             print('Соединение закрыто.')
@@ -58,51 +60,89 @@ def connect(func):
     return (wrapper)
 
 
+# Чтение данных
 @connect
-def query_with_fetchall():
+def query_with_fetchall(table=str,columns=''):
     '''Чтение данных'''
     try:
-        cursor.execute("SELECT * FROM inter_goal")
+        if columns=='':
+            cursor.execute(f"SELECT * FROM {table};")
+        else:
+            cursor.execute(f"SELECT {columns} FROM {table};")
         rows = cursor.fetchall()
-
+        # print(rows)
+        return rows
         '''Что бы выводить данные по одному как в генераторе'''
         # row = cursor.fetchone()
-        #
         # while row is not None:
         #     print(row)
         #     row = cursor.fetchone()
-
         '''Сразу все значения как в списке'''
-        print('Total Row(s):', cursor.rowcount)
-        for row in rows:
-            print(row)
+        # print('Total Row(s):', cursor.rowcount)
+        # for row in rows:
+        #     print(row)
 
     except Error as e:
         print(e)
 
+# Вставка значения
 @connect
-def insert_into_db(**kwargs):
+def insert_into_db(table=str,columns='',values=dict):
     ''' Вставка значения'''
-    query = f"INSERT INTO  VALUES()"
-    # cursor.execute(query, args)
-    # conn.commit()
+    value_str=''
+    for i in list(values.keys())[0:-1]:
+    	value_str=value_str+str(values[i])+','+'\n'
+    value_str=value_str+str(values[list(values.keys())[-1]])+';'
+    if columns=='':
+    	query = f"INSERT INTO {table} VALUES {value_str}"
+    else:
+    	query = f"INSERT INTO {table}({columns}) VALUES {value_str}"
+    print(query)
+    cursor.execute(query)
+    conn.commit()
 
+# Обновление данных
 @connect
-def update_book(**kwargs):
+def update_db(**kwargs):
     ''' Обновление данных '''
     query = f"UPDATE {''} SET {''} = %s WHERE {''} = %s"
     # cursor.execute(query, data)
     # conn.commit()
 
+# Удаление данных
 @connect
-def delete_book(**kwargs):
+def delete_db(**kwargs):
     ''' Удаление данных'''
     query = f"DELETE FROM {''} WHERE {''} = %s"
     cursor = conn.cursor()
     # cursor.execute(query, (book_id,))
     # conn.commit()
 
+def dowload_data():
+	# names=query_with_fetchall('inter_date')
+	names=['x','0', '0', '0', '0', '0', '0', '0',
+            'x','0', '0', '0', '0', '0', '0', '0',
+            'x','0', '0', '0', '0', '0', '0', '0',
+            'x','0', '0', '0', '0', '0', '0', '0',
+            'x','0', '0', '0', '0', '0', '0', '0',
+            'x','0', '0', '0', '0', '0','0', '0',]
+	month=[x for x in cal().itermonthdates(2021, 2)]
+	start_index=1
+	for i in month:
+		if names[start_index] =='x':
+			names[start_index+1] ==str(i)
+			start_index+=1
+		else:
+			names[start_index]=str(i)
+			start_index+=1
+	return names
+
 
 if __name__ == '__main__':
-    query_with_fetchall()
-    insert_into_db()
+    #query_with_fetchall('inter_date')
+    dowload_data()
+    #insert_into_db()
+    #вызов UI
+    app = QApplication(sys.argv)
+    ex = Example(dowload_data())
+    sys.exit(app.exec_())
