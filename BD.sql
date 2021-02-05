@@ -50,11 +50,17 @@
  (3,'Пойти на ММА'),
  (4,'Найти новую игру');
 
+INSERT INTO date_interest(interest_id,dt) VALUES 
+(3,'2021-02-01'),
+(4,'2021-02-02'),
+(3,'2021-02-04'),
+(1,'2021-02-06'),
+(2,'2021-02-07');
 
 CREATE OR REPLACE VIEW  inter_goal AS SELECT a.interest , b.goal,b.status from  interests a join goals b on a.id =b.interest_id ;
 
 select * from inter_goal;
 
-CREATE OR REPLACE VIEW  inter_date AS SELECT a.interest , b.dt from  interests a join date_interest b on a.id =b.interest_id ;
+CREATE OR REPLACE VIEW  inter_date AS SELECT b.dt, a.interest from  interests a join date_interest b on a.id=b.interest_id ;
 
 select * from inter_date;

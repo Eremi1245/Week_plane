@@ -8,7 +8,8 @@ import mysql.connector
 from mysql.connector import Error
 from UI import *
 from calendar import Calendar as cal
-from datetime import date as dt
+# from datetime import date as dt
+from datetime import datetime as dt
 def read_db_config(filename='db_config.ini', section='mysql'):
     """ Читает конфигурацию Базы данных и возвращает словарь с параметрами
     :param filename: имя конфига
@@ -118,33 +119,50 @@ def delete_db(**kwargs):
     # cursor.execute(query, (book_id,))
     # conn.commit()
 
-def dowload_data():
-	names=['x','0', '0', '0', '0', '0', '0', '0',
-            'x','0', '0', '0', '0', '0', '0', '0',
-            'x','0', '0', '0', '0', '0', '0', '0',
-            'x','0', '0', '0', '0', '0', '0', '0',
-            'x','0', '0', '0', '0', '0', '0', '0',
-            'x','0', '0', '0', '0', '0','0', '0',]
+def dowload_timetable():
 	month=[x for x in cal().itermonthdates(2021, 2)]
-	date_from_base=query_with_fetchall('inter_date')
-	for i in date_from_base:
-		month[month.index(i[1])]=str(i[1])+'\n'*3+i[0]
-	start_index=1
+	for i in range(0,len(month)+1,8):
+		month.insert(i,'x')
+	date_from_base=dict(query_with_fetchall('inter_date'))
+	dates=list(date_from_base.keys())
 	for i in month:
-		if names[start_index] =='x':
-			names[start_index+1] =str(i)
-			start_index+=1
+		if i == 'x':
+			continue
+		elif i in dates and i != 'x':
+			month[month.index(i)]=str(i)+'\n'*3+date_from_base[i]
 		else:
-			names[start_index]=str(i)
-			start_index+=1
-	return names
+			month[month.index(i)]=str(i)+'\n'*3+'Свободный день'
+	return month
+
+
+def dowload_interesttable():
+	template=''
+	query=query_with_fetchall('inter_goal')
+	interests={x[0] for x in query}
+	count_inter=0
+	for i in interests:
+		count_inter+=1
+		count_goal=0
+		template+=f'\n{count_inter}) Интерес: {i}\nЦели:\n'
+		for m in query:
+			if i == m[0]:
+				count_goal+=1
+				template+=f'{count_goal}) {m[1]} - {m[2]}\n'
+
+	return(template)
+
 
 
 if __name__ == '__main__':
     #query_with_fetchall('inter_date')
-    dowload_data()
+    dowload_timetable()
     #insert_into_db()
     #вызов UI
     app = QApplication(sys.argv)
-    ex = Example(dowload_data())
+    ex = Example(dowload_timetable(),dowload_interesttable())
     sys.exit(app.exec_())
+
+
+
+
+
