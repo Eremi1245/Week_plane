@@ -6,10 +6,12 @@ from configparser import ConfigParser
 from functools import wraps
 import mysql.connector
 from mysql.connector import Error
-from UI import *
+# from UI import *
 from calendar import Calendar as cal
-# from datetime import date as dt
-from datetime import datetime as dt
+from PyQt5 import QtWidgets
+from Ui2 import *  # импорт нашего сгенерированного файла
+import sys
+from datetime import date as dt
 def read_db_config(filename='db_config.ini', section='mysql'):
     """ Читает конфигурацию Базы данных и возвращает словарь с параметрами
     :param filename: имя конфига
@@ -151,16 +153,27 @@ def dowload_interesttable():
 
 	return(template)
 
+def dowload_colors():
+    colors = dict(query_with_fetchall('interests','interest,color'))
+    colors['Свободный день']='white'
+    return colors
 
+class mywindow(QtWidgets.QMainWindow):
+        def __init__(self, secondtable, firtstable, colors):
+            super(mywindow, self).__init__()
+            self.ui = Ui_MainWindow()
+            self.ui.setupUi(self, secondtable, firtstable, colors)
 
 if __name__ == '__main__':
-    #query_with_fetchall('inter_date')
-    dowload_timetable()
-    #insert_into_db()
     #вызов UI
-    app = QApplication(sys.argv)
-    ex = Example(dowload_timetable(),dowload_interesttable())
-    sys.exit(app.exec_())
+    # app = QApplication(sys.argv)
+    # ex = Example(dowload_timetable(),dowload_interesttable(),dowload_colors())
+    # sys.exit(app.exec_())
+    app = QtWidgets.QApplication([])
+    application = mywindow(dowload_timetable(),dowload_interesttable(),dowload_colors())
+    application.show()
+    sys.exit(app.exec())
+
 
 
 
