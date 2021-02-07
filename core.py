@@ -9,9 +9,10 @@ from mysql.connector import Error
 # from UI import *
 from calendar import Calendar as cal
 from PyQt5 import QtWidgets
-from Ui2 import *  # импорт нашего сгенерированного файла
+from BestUI import *  # импорт нашего сгенерированного файла
 import sys
-from datetime import date as dt
+
+
 def read_db_config(filename='db_config.ini', section='mysql'):
     """ Читает конфигурацию Базы данных и возвращает словарь с параметрами
     :param filename: имя конфига
