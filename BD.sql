@@ -57,7 +57,7 @@ INSERT INTO date_interest(interest_id,dt) VALUES
 (1,'2021-02-06'),
 (2,'2021-02-07');
 
-CREATE OR REPLACE VIEW  inter_goal AS SELECT a.interest , b.goal,b.status from  interests a join goals b on a.id =b.interest_id ;
+CREATE OR REPLACE VIEW  inter_goal AS SELECT a.interest , b.goal,b.status from  interests a left join goals b on a.id =b.interest_id ;
 
 select * from inter_goal;
 

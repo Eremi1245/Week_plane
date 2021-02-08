@@ -21,7 +21,6 @@ def read_db_config(filename='db_config.ini', section='mysql'):
     """
     parser = ConfigParser()
     parser.read(filename)
-
     db = {}
     if parser.has_section(section):
         items = parser.items(section)
@@ -94,9 +93,13 @@ def query_with_fetchall(table=str,columns=''):
 def insert_into_db(table=str,columns='',values=dict):
     ''' Вставка значения'''
     value_str=''
-    for i in list(values.keys())[0:-1]:
-    	value_str=value_str+str(values[i])+','+'\n'
-    value_str=value_str+str(values[list(values.keys())[-1]])+';'
+    if len(values.keys())>1:
+        for i in list(values.keys())[0:-1]:
+            value_str=value_str+str(values[i])+','+'\n'
+        value_str=value_str+str(values[list(values.keys())[-1]])+';'
+    else:
+        value_str=value_str+f'({str(values[list(values.keys())[-1]])})'+';'
+    
     if columns=='':
     	query = f"INSERT INTO {table} VALUES {value_str}"
     else:

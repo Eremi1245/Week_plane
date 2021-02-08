@@ -12,7 +12,27 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import (QWidget, QGridLayout,
                              QPushButton, QApplication,QLabel,)
 from datetime import date as dt
+from addinterestUI import *
+from delinterestUI import *
 
+
+class addinterestWindow(QtWidgets.QMainWindow):
+	def __init__(self):
+		super(addinterestWindow, self).__init__()
+		self.ui = Ui_AddInterest()
+		self.ui.setupUi(self)
+
+app2 = QtWidgets.QApplication([])
+application2 = addinterestWindow()
+
+class delinterestWindow(QtWidgets.QMainWindow):
+	def __init__(self):
+		super(delinterestWindow, self).__init__()
+		self.ui = Ui_DelInterest()
+		self.ui.setupUi(self)
+
+app3 = QtWidgets.QApplication([])
+application3 = delinterestWindow()
 
 class Ui_MainWindow(object):
     def setupUi(self, WeekPlane,secondtable, firtstable, colors):
@@ -40,12 +60,12 @@ class Ui_MainWindow(object):
         Sunday = QLabel('Воскресенье')
         positions = [(i, j) for i in range(8) for j in range(8)]
         for position, name in zip(positions, self.secondtable):
-            button = QLabel(name)
+            button = QPushButton(name)
             if len(name) == 1:
                 continue
             else:
                 if td > dt.fromisoformat(name[0:10]): \
-                        button.setStyleSheet("background-color: grey")
+                        button.setStyleSheet("background-color: IndianRed")
                 else:
                     button.setStyleSheet(f"background-color: {self.colors[name[13:]]}")
             calendar.addWidget(button, *position)
@@ -114,8 +134,10 @@ class Ui_MainWindow(object):
         self.action_3 = QtWidgets.QAction(WeekPlane)
         self.action_3.setCheckable(False)
         self.action_3.setObjectName("action_3")
+        self.action_3.triggered.connect(application2.show)
         self.action_5 = QtWidgets.QAction(WeekPlane)
         self.action_5.setObjectName("action_5")
+        self.action_5.triggered.connect(application3.show)
         self.menuvty.addAction(self.action)
         self.menuvty.addSeparator()
         self.menu.addAction(self.action_3)
@@ -145,5 +167,6 @@ class Ui_MainWindow(object):
         self.action.setText(_translate("WeekPlane", "Выход"))
         self.action_3.setText(_translate("WeekPlane", "Добавить новый Интерес"))
         self.action_5.setText(_translate("WeekPlane", "Удалить Интерес"))
+
 
 
