@@ -9,7 +9,7 @@ from mysql.connector import Error
 # from UI import *
 from calendar import Calendar as cal
 from PyQt5 import QtWidgets
-from BestUI import *  # импорт нашего сгенерированного файла
+from UserInterface.MainWindowUI import *  # импорт нашего сгенерированного файла
 import sys
 
 

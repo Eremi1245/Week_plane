@@ -12,8 +12,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import (QWidget, QGridLayout,
                              QPushButton, QApplication,QLabel,)
 from datetime import date as dt
-from addinterestUI import *
-from delinterestUI import *
+from .InterestUI.addinterestUI import *
+from .InterestUI.delinterestUI import *
 
 
 class addinterestWindow(QtWidgets.QMainWindow):
